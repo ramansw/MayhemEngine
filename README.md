@@ -37,8 +37,13 @@ Unreal Gameplay Debugger), and
 `docs/MayhemDebugger_DecisionChain_API_Spec.md` for the implementation-level
 API/data-structure spec.
 
-Status: v0.1 core (chain recorder + registry + console demo) — see the
-roadmap in the design report. No ImGui overlay yet.
+Status:
+- Milestone M1 (core chain recorder + registry + console demo) — done.
+- Milestone M2 (ImGui overlay + live windowed demo) — implemented, backend
+  is GLFW + OpenGL3. **Not yet build-verified** — first configure needs
+  internet access to fetch Dear ImGui and GLFW via CMake FetchContent.
+- M3 (portfolio demo recording) and the stretch goals (capture/replay,
+  spatial draw tie-in, compound-expression support) — not started.
 
 ## Building
 
@@ -46,8 +51,19 @@ roadmap in the design report. No ImGui overlay yet.
 mkdir build && cd build
 cmake ..
 cmake --build .
-./modules/MayhemDebugger/samples/enemy_demo/enemy_demo
 ```
+
+Two demos get built:
+
+- `modules/MayhemDebugger/samples/enemy_demo/enemy_demo` — console-only,
+  prints the decision chain once and exits.
+- `modules/MayhemDebugger/samples/overlay_demo/overlay_demo` — a live window
+  (GLFW + OpenGL3 + ImGui) with sliders to move the player and toggle line
+  of sight/cooldown, so you can watch the chain in `mdbg::DrawOverlay()`
+  update in real time.
+
+Pass `-DMDBG_WITH_IMGUI=OFF` to `cmake` to skip the overlay/GLFW/ImGui
+entirely and build only the console demo (no internet needed in that case).
 
 ## Repository layout
 
@@ -55,10 +71,11 @@ cmake --build .
 MayhemEngine/
   modules/
     MayhemDebugger/
-      include/mdbg/       public headers
-      src/                implementation
-      samples/enemy_demo/ standalone reproduction of the design doc's example
-  docs/                   design report + API spec
+      include/mdbg/           public headers (chain.h, registry.h, imgui_overlay.h)
+      src/                    implementation
+      samples/enemy_demo/     console-only reproduction of the design doc's example
+      samples/overlay_demo/   live ImGui overlay, same scenario, interactive
+  docs/                       design report + API spec
 ```
 
 ## License

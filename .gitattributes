@@ -1,0 +1,11 @@
+# Normalize line endings: keep source/text files as LF in the repo,
+# let git convert to CRLF on checkout for Windows editors that want it.
+* text=auto eol=lf
+
+*.h    text
+*.cpp  text
+*.txt  text
+*.md   text
+
+# Binary — never touch line endings
+*.docx binary

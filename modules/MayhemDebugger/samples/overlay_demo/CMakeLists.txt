@@ -1,0 +1,2 @@
+add_executable(overlay_demo main.cpp)
+target_link_libraries(overlay_demo PRIVATE MayhemDebuggerOverlay)

@@ -1,5 +1,5 @@
 #pragma once
-// MayhemDebugger — Decision Chain core types
+// MayhemDebugger Decision Chain core types
 // See docs/MayhemDebugger_DecisionChain_API_Spec.md for the full design rationale.
 
 #include <cstdint>
