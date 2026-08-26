@@ -1,0 +1,33 @@
+# build output
+build/
+out/
+cmake-build-*/
+
+# CMake
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+*.cmake
+!CMakeLists.txt
+
+# compiled objects / binaries
+*.o
+*.obj
+*.exe
+*.pdb
+*.ilk
+*.a
+*.lib
+*.dll
+*.so
+
+# IDE / editor
+.vs/
+.vscode/
+*.user
+.idea/
+
+# Office lock/temp files (created while a docx is open)
+~$*
+*.docx#
