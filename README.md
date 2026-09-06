@@ -77,11 +77,11 @@ void AMyCharacter::OnRep_Health()
 2. Click **+** → **Add package from git URL**
 3. Enter:
    ```
-   https://github.com/YOUR_USERNAME/MayhemEngine.git?path=/Unity
+   https://github.com/ramansw/MayhemEngine.git?path=/Unity
    ```
    To pin to a specific version:
    ```
-   https://github.com/YOUR_USERNAME/MayhemEngine.git?path=/Unity#v1.0.0
+   https://github.com/ramansw/MayhemEngine.git?path=/Unity#v1.0.0
    ```
 
 ### Option B — Download zip
