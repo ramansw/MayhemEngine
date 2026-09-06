@@ -1,0 +1,35 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Create UE Plugin zip
+        run: |
+          cd UE
+          zip -r "../MayhemDebugger-UE-${{ github.ref_name }}.zip" MayhemDebugger/
+
+      - name: Create Unity Package zip
+        run: |
+          zip -r "MayhemDebugger-Unity-${{ github.ref_name }}.zip" Unity/
+
+      - name: Publish GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: "MayhemEngine ${{ github.ref_name }}"
+          generate_release_notes: true
+          files: |
+            MayhemDebugger-UE-${{ github.ref_name }}.zip
+            MayhemDebugger-Unity-${{ github.ref_name }}.zip

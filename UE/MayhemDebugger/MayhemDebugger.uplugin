@@ -1,0 +1,23 @@
+{
+    "FileVersion": 3,
+    "Version": 1,
+    "VersionName": "1.0",
+    "FriendlyName": "MayhemDebugger",
+    "Description": "Decision-chain debugger: records every condition checked in a gameplay decision and shows exactly which one failed, instead of just the current state. Drop into Plugins/, add MayhemDebugger to your module dependencies, use DEBUG_CHAIN / DEBUG_CHECK macros.",
+    "Category": "Debug",
+    "CreatedBy": "raman",
+    "CanContainContent": false,
+    "Installed": false,
+    "Modules": [
+        {
+            "Name": "MayhemDebugger",
+            "Type": "Runtime",
+            "LoadingPhase": "Default"
+        },
+        {
+            "Name": "MayhemDebuggerEditor",
+            "Type": "Editor",
+            "LoadingPhase": "PostEngineInit"
+        }
+    ]
+}

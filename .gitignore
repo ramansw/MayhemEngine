@@ -1,33 +1,46 @@
-# build output
+# ── Build output ─────────────────────────────────────────────────────────────
 build/
+**/build/
 out/
-cmake-build-*/
-
-# CMake
-CMakeFiles/
-CMakeCache.txt
-cmake_install.cmake
-Makefile
-*.cmake
-!CMakeLists.txt
-
-# compiled objects / binaries
-*.o
-*.obj
-*.exe
+*.lib
+*.exp
 *.pdb
 *.ilk
-*.a
-*.lib
-*.dll
-*.so
+*.obj
 
-# IDE / editor
+# ── Unreal Engine ─────────────────────────────────────────────────────────────
+Binaries/
+Intermediate/
+Saved/
+DerivedDataCache/
+*.sln
+*.suo
 .vs/
-.vscode/
-*.user
-.idea/
+*.VC.db
+*.VC.opendb
 
-# Office lock/temp files (created while a docx is open)
-~$*
-*.docx#
+# ── Visual Studio / CMake ─────────────────────────────────────────────────────
+CMakeSettings.json
+CMakeCache.txt
+cmake_install.cmake
+*.vcxproj.user
+.vs/
+x64/
+x86/
+
+# ── JetBrains / VS Code ───────────────────────────────────────────────────────
+.idea/
+.vscode/
+*.iml
+
+# ── OS ────────────────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ── Compiled DLLs (keep the ones checked in under Unity/Runtime/Plugins) ─────
+# The DLLs under Unity/Runtime/Plugins/x86_64/ ARE intentionally committed
+# so users can install via UPM git URL without needing to build from source.
+# Only exclude DLLs that land in build output folders.
+build/**/*.dll
+**/build/**/*.dll

@@ -1,0 +1,18 @@
+{
+  "name": "com.mayhemengine.debugger",
+  "version": "1.0.0",
+  "displayName": "MayhemDebugger",
+  "description": "Decision-chain debugger for Unity: records the chain of checks that produced a gameplay/AI decision and shows exactly which one failed, instead of just the current state. Includes break-on-fail (auto-pause Play Mode on a specific failing step). Native C++ core (MayhemEngine/MayhemDebugger) behind a P/Invoke bridge.",
+  "unity": "2020.3",
+  "keywords": ["debug", "debugger", "ai", "gameplay", "tools", "editor"],
+  "author": {
+    "name": "Raman"
+  },
+  "samples": [
+    {
+      "displayName": "Enemy AI Example",
+      "description": "Enemy-attack decision chain (target acquired / in range / line of sight / cooldown) -- the same scenario as the C++ console and ImGui demos, ported to a MonoBehaviour.",
+      "path": "Samples~/EnemyExample"
+    }
+  ]
+}

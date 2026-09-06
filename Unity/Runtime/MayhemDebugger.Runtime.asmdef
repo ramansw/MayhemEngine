@@ -1,0 +1,14 @@
+{
+    "name": "MayhemDebugger.Runtime",
+    "rootNamespace": "MayhemDebugger",
+    "references": [],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": ["MayhemDebuggerUnityBridge.dll", "NetTraceUnityBridge.dll"],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

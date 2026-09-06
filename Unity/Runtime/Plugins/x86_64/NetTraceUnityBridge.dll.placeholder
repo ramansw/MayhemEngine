@@ -1,0 +1,3 @@
+Place the compiled NetTraceUnityBridge.dll here.
+Built from: modules/NetTraceUnityBridge/CMakeLists.txt
+The asmdef already declares a precompiledReference for it.

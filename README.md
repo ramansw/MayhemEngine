@@ -1,84 +1,134 @@
 # MayhemEngine
 
-A small, personal framework of game-dev tooling. This is a from-scratch
-learning/portfolio project, not a production engine — the goal is a handful
-of focused, engine-agnostic C++ modules, each solving one real problem well,
-rather than a monolithic engine.
+Game debugging toolset with two components that work together in both **Unreal Engine** and **Unity**.
 
-## Modules
+| Tool | What it answers |
+|---|---|
+| **MayhemDebugger** | *Why did this decision happen?* — records every condition checked and shows exactly which one failed |
+| **NetTrace** | *What actually went over the wire?* — rolling log of network send/receive events with sizes and tagged values |
 
-### MayhemDebugger
+Both are included in the same plugin/package. Zero external dependencies. No heap allocation in hot paths.
 
-A decision-chain debugger: instead of showing the *current state* of a
-gameplay/AI decision (what most engine debuggers and profilers already do),
-it records the *chain of checks* that produced a decision and shows exactly
-which one failed, and why.
+---
 
-Example: an enemy isn't attacking. Instead of a state dump —
+## Unreal Engine — Installation
 
+**Supports UE 5.3+**
+
+1. Copy the `UE/MayhemDebugger/` folder into your project's `Plugins/` directory:
+   ```
+   YourProject/
+   └── Plugins/
+       └── MayhemDebugger/      ← drop it here
+           ├── MayhemDebugger.uplugin
+           └── Source/
+   ```
+
+2. Right-click your `.uproject` → **Generate Visual Studio project files**
+
+3. Open your project's `.uproject` in a text editor and add to the `"Plugins"` array:
+   ```json
+   { "Name": "MayhemDebugger", "Enabled": true }
+   ```
+
+4. Add `"MayhemDebugger"` to your module's `PublicDependencyModuleNames` in `YourModule.Build.cs`:
+   ```csharp
+   PublicDependencyModuleNames.AddRange(new string[] { "Core", "MayhemDebugger" });
+   ```
+
+5. Build and run. Two panels appear under **Tools → Debug**:
+   - **MayhemDebugger** — live decision-chain viewer
+   - **NetTrace** — live network event viewer
+
+### UE Usage
+
+```cpp
+#include "MayhemDebugger.h"
+#include "MayhemDebuggerNetTrace.h"
+
+// Decision chain — records why a decision happened
+void AMyCharacter::DoJump()
+{
+    DEBUG_CHAIN("DoJump");
+    if (!DEBUG_CHECK("IsAlive",    currentHealth > 0.f, mdbg::V("health", currentHealth))) return;
+    if (!DEBUG_CHECK("HasControl", GetController() != nullptr)) return;
+    Jump();
+}
+
+// Network tracing — records what went over the wire
+void AMyCharacter::OnRep_Health()
+{
+    NET_TRACE_RECEIVE("Rep_Health")
+        .Bytes(sizeof(float))
+        .Value("health", currentHealth)
+        .Record();
+}
 ```
-AI State: Combat
-Target: Player
-Distance: 7.4m
+
+---
+
+## Unity — Installation
+
+**Supports Unity 2020.3+**
+
+### Option A — UPM Git URL (recommended, no manual steps)
+
+1. Open **Window → Package Manager**
+2. Click **+** → **Add package from git URL**
+3. Enter:
+   ```
+   https://github.com/YOUR_USERNAME/MayhemEngine.git?path=/Unity
+   ```
+   To pin to a specific version:
+   ```
+   https://github.com/YOUR_USERNAME/MayhemEngine.git?path=/Unity#v1.0.0
+   ```
+
+### Option B — Download zip
+
+Download `MayhemDebugger-Unity-vX.X.X.zip` from [Releases](../../releases), extract it, and import via **Assets → Import Package → Custom Package**.
+
+### Unity Usage
+
+```csharp
+using MayhemDebugger;
+using MayhemDebugger.NetTrace;
+
+// Decision chain
+void Attack()
+{
+    using var chain = MDBG.Chain("Attack");
+    if (!chain.Check("TargetInRange",  distanceToTarget < attackRange)) return;
+    if (!chain.Check("CooldownReady",  cooldownTimer <= 0f))            return;
+    DealDamage();
+}
+
+// Network event
+void OnPacketSent(int bytes)
+{
+    NTR.RecordSend("PlayerPosition").Bytes(bytes).Value("pos", transform.position.ToString()).Record();
+}
 ```
 
-— MayhemDebugger records:
+Open **Window → MayhemDebugger → Debugger** and **Window → MayhemDebugger → NetTrace** for the live viewers.
 
-```
-== CanAttack ==
-  TargetAcquired   [PASS]
-  InAttackRange    [FAIL]  distance=5.70  range=5.00
-  -- chain stopped here, remaining steps not reached --
-```
+---
 
-See `docs/MayhemDebugger_Design_Report.docx` for the full design rationale
-and competitive research (why this isn't just a smaller Tracy/Palanteer/
-Unreal Gameplay Debugger), and
-`docs/MayhemDebugger_DecisionChain_API_Spec.md` for the implementation-level
-API/data-structure spec.
+## Building from Source
 
-Status:
-- Milestone M1 (core chain recorder + registry + console demo) — done.
-- Milestone M2 (ImGui overlay + live windowed demo) — implemented, backend
-  is GLFW + OpenGL3. **Not yet build-verified** — first configure needs
-  internet access to fetch Dear ImGui and GLFW via CMake FetchContent.
-- M3 (portfolio demo recording) and the stretch goals (capture/replay,
-  spatial draw tie-in, compound-expression support) — not started.
+The `modules/` folder contains the full C++ source, tests, and demos.
 
-## Building
+**Requirements:** CMake 3.16+, C++17 compiler (MSVC, GCC, Clang)
 
-```
-mkdir build && cd build
-cmake ..
-cmake --build .
+```bash
+cmake -S modules/NetTraceUnityBridge -B build/ntr
+cmake --build build/ntr --config Release
 ```
 
-Two demos get built:
+The built `NetTraceUnityBridge.dll` goes into `Unity/Runtime/Plugins/x86_64/`.
 
-- `modules/MayhemDebugger/samples/enemy_demo/enemy_demo` — console-only,
-  prints the decision chain once and exits.
-- `modules/MayhemDebugger/samples/overlay_demo/overlay_demo` — a live window
-  (GLFW + OpenGL3 + ImGui) with sliders to move the player and toggle line
-  of sight/cooldown, so you can watch the chain in `mdbg::DrawOverlay()`
-  update in real time.
-
-Pass `-DMDBG_WITH_IMGUI=OFF` to `cmake` to skip the overlay/GLFW/ImGui
-entirely and build only the console demo (no internet needed in that case).
-
-## Repository layout
-
-```
-MayhemEngine/
-  modules/
-    MayhemDebugger/
-      include/mdbg/           public headers (chain.h, registry.h, imgui_overlay.h)
-      src/                    implementation
-      samples/enemy_demo/     console-only reproduction of the design doc's example
-      samples/overlay_demo/   live ImGui overlay, same scenario, interactive
-  docs/                       design report + API spec
-```
+---
 
 ## License
 
-Not yet decided — add a LICENSE file before treating this as reusable by
-anyone other than the author.
+MIT
