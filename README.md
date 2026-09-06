@@ -4,8 +4,8 @@ Game debugging toolset with two components that work together in both **Unreal E
 
 | Tool | What it answers |
 |---|---|
-| **MayhemDebugger** | *Why did this decision happen?* — records every condition checked and shows exactly which one failed |
-| **NetTrace** | *What actually went over the wire?* — rolling log of network send/receive events with sizes and tagged values |
+| **MayhemDebugger** | *Why did this decision happen?*   records every condition checked and shows exactly which one failed |
+| **NetTrace** | *What actually went over the wire?*  rolling log of network send/receive events with sizes and tagged values |
 
 Both are included in the same plugin/package. Zero external dependencies. No heap allocation in hot paths.
 
@@ -67,7 +67,7 @@ void AMyCharacter::OnRep_Health()
 
 ---
 
-## Unity — Installation
+## Unity  Installation
 
 **Supports Unity 2020.3+**
 
